@@ -1,3 +1,5 @@
+Welcome to the JAndFix wiki!
+``
 # JAndFix
 
 ### 简述
@@ -75,10 +77,10 @@ art中可以采用解释模式或者AOT机器码模式执行。
 而如果是AOT的方式，就会先预编译好Dex Code对应的机器码，然后运行期直接执行机器码就行了，不需要一条条地解释执行Dex Code。如果方法的调用者是以AOT机器码方式执行的，在调用这个方法时，就是跳转到entry_point_from_quick_compiled_code_执行。
 
 AndFix的方法替换其本质是ArtMethod指针所指内容的替换。
-![Art Method--Art 6.0](ArtMethod1.png)
+![ArtMethod1.png](http://upload-images.jianshu.io/upload_images/4542703-5f53681d08cb7fbe.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 变成了这样的整体替换
-![Art Method--Art 6.0](ArtMethod2.png)
+![ArtMethod2.png](http://upload-images.jianshu.io/upload_images/4542703-c5d8434c1adb1114.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 由Unsafe来实现相当于:
 
@@ -189,7 +191,7 @@ public class MethodReplace6_0 implements IMethodReplace {
 
 ```
 1.declaring_class不能替换，为什么不能替换，是因为JVM去调用方式时很多地方都要对declaring_class进行检查。替换declaring_class会导致未知的错误。
-2.methodIndex 不能替换，因为public proected等简介寻址的访问权限，本质在寻找方法的时候会查找virtual_methods_，而virtual_methods_是个ArtMethod数组对象，需要通过methodIndex来查找，如果你的methodIndex不对会导致方法寻址出错。
+2.methodIndex 不能替换，因为public proected等间接寻址的访问权限，本质在寻找方法的时候会查找virtual_methods_，而virtual_methods_是个ArtMethod数组对象，需要通过methodIndex来查找，如果你的methodIndex不对会导致方法寻址出错。
 3.为什么AbstractMethod类中对应的artMethod属性的值可以作为c层ArtMethod的地址直接使用？看源码：
 
 ```
@@ -203,8 +205,10 @@ static MemberOffset ArtMethodOffset() {
     return MemberOffset(OFFSETOF_MEMBER(AbstractMethod, art_method_));
   }
 ```
-从源码可以看出C层在获取ArtMethod的地址，实际上就是把AbstractMethod的artMethod强制转换成了ArtMethod*指针，及我们在Java拿到的artMethod就是c层ArtMethod的实际地址。是不是很简单。
+从源码可以看出C层在获取ArtMethod的地址，实际上就是把AbstractMethod的artMethod强制转换成了ArtMethod*指针，即我们在Java拿到的artMethod就是c层ArtMethod的实际地址。是不是很简单。
 
+### Git
+* [JAndFix:https://github.com/alibaba/JAndFix](https://github.com/alibaba/JAndFix)
 ### 参考
 * [Unsafe](http://mishadoff.com/blog/java-magic-part-4-sun-dot-misc-dot-unsafe/)
 * [AndFix](https://github.com/alibaba/AndFix)

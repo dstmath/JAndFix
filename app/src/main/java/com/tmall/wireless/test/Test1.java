@@ -7,7 +7,7 @@ package com.tmall.wireless.test;
 public class Test1 {
 
     public String string() {
-        return "Hello World1";
+        return "Test1";
     }
 
     public String string2() {

@@ -14,8 +14,8 @@ public class Test1 {
         return "Test1";
     }
 
-    public String string2() {
-        return "string2";
+    private String privateString(){
+        return "privateTest1";
     }
 
     public static String staticString() {

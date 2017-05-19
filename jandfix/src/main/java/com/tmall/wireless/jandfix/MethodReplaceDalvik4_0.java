@@ -13,11 +13,11 @@ public class MethodReplaceDalvik4_0 implements IMethodReplace {
 
     private final static int DIRECT_METHOD_OFFSET = 25;
     private final static int VIRTUAL_METHOD_OFFSET = 27;
-    private final static int METHOD_SIZE_BYTE = 44;
-    private final static int METHOD_INDEX_OFFSET = 2;
+//    private final static int METHOD_SIZE_BYTE = 56;
 
     static Field methodSlotField;
     static Field constructSlotField;
+    static int methodSize = 56;
 
     static {
         try {
@@ -26,6 +26,26 @@ public class MethodReplaceDalvik4_0 implements IMethodReplace {
 
             constructSlotField = Constructor.class.getDeclaredField("slot");
             constructSlotField.setAccessible(true);
+
+            int directMethodAddr = UnsafeProxy.getIntVolatile(MethodSizeCase.class, DIRECT_METHOD_OFFSET * 4);
+            int declaringClassAddr = (int) UnsafeProxy.getObjectAddress(MethodSizeCase.class);
+            int count = 0;
+            int elementCount = 0;
+            //通过扫面内存来确认Method的结构体大小
+            for (int i = 0; i < 100; i++) {
+                int value = UnsafeProxy.getIntVolatile(directMethodAddr + i * 4);
+                if (value == declaringClassAddr) {
+                    count++;
+                }
+                if (count == 2) {
+                    break;
+                }
+                if (count == 1) {
+                    elementCount++;
+                }
+            }
+            methodSize = 4 * elementCount;
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -71,7 +91,7 @@ public class MethodReplaceDalvik4_0 implements IMethodReplace {
             slotDest = -(slotDest + 1);
         }
 
-        replaceReal(virtualMethodSrcAddr + slotSrc * METHOD_SIZE_BYTE, virtualMethodDestAddr + slotDest * METHOD_SIZE_BYTE);
+        replaceReal(virtualMethodSrcAddr + slotSrc * methodSize, virtualMethodDestAddr + slotDest * methodSize, src.getDeclaringClass());
     }
 
     @Override
@@ -106,19 +126,15 @@ public class MethodReplaceDalvik4_0 implements IMethodReplace {
             slotDest = -(slotDest + 1);
         }
 
-        replaceReal(virtualMethodSrcAddr + slotSrc * METHOD_SIZE_BYTE, virtualMethodDestAddr + slotDest * METHOD_SIZE_BYTE);
+        replaceReal(virtualMethodSrcAddr + slotSrc * methodSize, virtualMethodDestAddr + slotDest * methodSize, src.getDeclaringClass());
     }
 
-    private void replaceReal(long src, long dest) throws Exception {
+    private void replaceReal(long src, long dest, Class declaringClass) throws Exception {
         //why 1? index 0 is declaring_class, declaring_class need not replace.
-        for (int i = 1, size = METHOD_SIZE_BYTE / 4; i < size; i++) {
-            if (i == METHOD_INDEX_OFFSET) {
-                int destValue = UnsafeProxy.getIntVolatile(dest + i * 4);
-                int srcValue = UnsafeProxy.getIntVolatile(src + i * 4);
-                //keep methodIndex
-                int value = (srcValue & 0xFFFF000) | (destValue & 0x0000FFFF);
-                UnsafeProxy.putIntVolatile(src + i * 4, value);
-            } else {
+        int declaringClassAddr = (int) UnsafeProxy.getObjectAddress(declaringClass);
+        for (int i = 0, size = methodSize / 4; i < size; i++) {
+            int srcValue = UnsafeProxy.getIntVolatile(src + i * 4);
+            if (srcValue != declaringClassAddr) {
                 int value = UnsafeProxy.getIntVolatile(dest + i * 4);
                 UnsafeProxy.putIntVolatile(src + i * 4, value);
             }

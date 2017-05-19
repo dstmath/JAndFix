@@ -20,19 +20,22 @@ public class AndFixApplication extends Application {
         super.onCreate();
         try {
 //            Class.forName("com.tmall.wireless.test.Test2", true, this.getClass().getClassLoader());
-
+            Constructor constructor1 = Test1.class.getConstructor();
+            Constructor constructor2 = Test2.class.getConstructor();
+            MethodReplaceProxy.instance().replace(constructor1, constructor2);
 
             Method method1 = Test1.class.getDeclaredMethod("string");
             Method method2 = Test2.class.getDeclaredMethod("string");
             MethodReplaceProxy.instance().replace(method1, method2);
 
-            Constructor constructor1 = Test1.class.getConstructor();
-            Constructor constructor2 = Test2.class.getConstructor();
-            MethodReplaceProxy.instance().replace(constructor1, constructor2);
 
             Method staticMethod1 = Test1.class.getDeclaredMethod("staticString");
             Method staticMethod2 = Test2.class.getDeclaredMethod("staticString");
             MethodReplaceProxy.instance().replace(staticMethod1, staticMethod2);
+
+            Method privateMethod1 = Test1.class.getDeclaredMethod("privateString");
+            Method privateMethod2 = Test2.class.getDeclaredMethod("privateString");
+            MethodReplaceProxy.instance().replace(privateMethod1, privateMethod2);
 
         } catch (Exception e) {
             e.printStackTrace();

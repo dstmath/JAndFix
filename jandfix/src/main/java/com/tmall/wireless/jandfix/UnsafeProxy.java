@@ -79,8 +79,8 @@ public class UnsafeProxy {
         return getIntVolatile(objects, arrayBaseOffset);
     }
 
-    public static int objectFieldOffset(Field field) throws Exception {
-        return (int) objectFieldOffsetMethod.invoke(unsafe, field);
+    public static long objectFieldOffset(Field field) throws Exception {
+        return (long) objectFieldOffsetMethod.invoke(unsafe, field);
     }
 
 }

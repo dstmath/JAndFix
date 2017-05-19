@@ -9,8 +9,9 @@ import java.lang.reflect.Method;
 
 public class MethodSize5_1 implements IMethodSize {
 
-    private static int size =Constants.INVALID_SIZE;
+    private static int size = Constants.INVALID_SIZE;
     private static int methodIndexOffset = Constants.INVALID_SIZE;
+    private static int declaringClassOffset = Constants.INVALID_SIZE;
 
     static {
         try {
@@ -33,11 +34,14 @@ public class MethodSize5_1 implements IMethodSize {
                 size = -size;
             }
 
-            //init methodIndexOffset
+            //init methodIndexOffset declaringClassOffset
             Class artMethodClass = object1.getClass();
             Field methodIndexField = artMethodClass.getDeclaredField("methodIndex");
+            Field declaringClassField = artMethodClass.getDeclaredField("declaringClass");
 
-            methodIndexOffset = UnsafeProxy.objectFieldOffset(methodIndexField);
+            declaringClassOffset = (int) UnsafeProxy.objectFieldOffset(declaringClassField);
+            methodIndexOffset = (int) UnsafeProxy.objectFieldOffset(methodIndexField);
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -52,4 +56,11 @@ public class MethodSize5_1 implements IMethodSize {
     public int methodIndexOffset() throws Exception {
         return methodIndexOffset;
     }
+
+    @Override
+    public int declaringClassOffset() throws Exception {
+        return declaringClassOffset;
+    }
+
+
 }

@@ -5,6 +5,14 @@ package com.tmall.wireless.jandfix;
  */
 public final class MethodSizeCase {
 
+    private MethodSizeCase(){
+
+    }
+
+    MethodSizeCase(int i){
+
+    }
+
     private void method1() {
     }
 

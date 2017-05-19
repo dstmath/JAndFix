@@ -2,6 +2,7 @@ package com.tmall.wireless.jandfix;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 
 import android.os.Build;
 
@@ -62,6 +63,10 @@ public class MethodReplaceProxy implements IMethodReplace {
 
         if (!checkClasses(src.getParameterTypes(), dest.getParameterTypes())) {
             throw new RuntimeException("参数类型必须一致");
+        }
+
+        if (!Modifier.isStatic(src.getModifiers()) == Modifier.isStatic(dest.getModifiers())) {
+            throw new RuntimeException("必须都为static或都不为static");
         }
 
     }

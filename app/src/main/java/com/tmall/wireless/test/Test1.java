@@ -22,7 +22,6 @@ public class Test1 {
         return "protectedTest1";
     }
 
-
     public static String staticString() {
         return "StaticTest1";
     }

@@ -24,10 +24,14 @@ public class MainActivity extends Activity {
         TextView textView = (TextView) findViewById(R.id.text);
         try {
             Test1 test1 = new Test1();
-            Method method = Test1.class.getDeclaredMethod("privateString");
-            method.setAccessible(true);
+            Method privateMethod = Test1.class.getDeclaredMethod("privateString");
+            privateMethod.setAccessible(true);
+
+            Method protectedMethod = Test1.class.getDeclaredMethod("protectedString");
+            protectedMethod.setAccessible(true);
             textView.setText("本应该显示:Test1;实际显示:" + test1.string()
-                    + "\n" + "本应该显示:prvateTest1;实际显示:" + method.invoke(test1)
+                    + "\n" + "本应该显示:privateTest1;实际显示:" + privateMethod.invoke(test1)
+                    + "\n" + "本应该显示:protectedTest1;实际显示:" + protectedMethod.invoke(test1)
                     + "\n" + "本应该显示:StaticTest1;实际显示:" + test1.staticString());
         } catch (Exception e) {
             e.printStackTrace();

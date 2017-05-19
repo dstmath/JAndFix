@@ -37,6 +37,10 @@ public class AndFixApplication extends Application {
             Method privateMethod2 = Test2.class.getDeclaredMethod("privateString");
             MethodReplaceProxy.instance().replace(privateMethod1, privateMethod2);
 
+            Method protectedMethod1 = Test1.class.getDeclaredMethod("protectedString");
+            Method protectedMethod2 = Test2.class.getDeclaredMethod("protectedString");
+            MethodReplaceProxy.instance().replace(protectedMethod1, protectedMethod2);
+
         } catch (Exception e) {
             e.printStackTrace();
         }

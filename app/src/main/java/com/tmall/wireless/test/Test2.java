@@ -14,8 +14,12 @@ public class Test2 {
         return "Test2";
     }
 
-    private String privateString(){
-        return "privateTest1";
+    private String privateString() {
+        return "privateTest2";
+    }
+
+    protected String protectedString() {
+        return "protectedTest2";
     }
 
     public static String staticString() {

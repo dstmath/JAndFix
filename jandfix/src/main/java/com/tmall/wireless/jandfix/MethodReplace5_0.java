@@ -39,19 +39,24 @@ public class MethodReplace5_0 implements IMethodReplace {
         replaceReal(o1, o2);
     }
 
-    private void replaceReal(Object src, Object dest) {
+    private void replaceReal(Object src, Object dest) throws Exception {
         Class c = src.getClass();
-        try {
-            while (c != Object.class) {
-                for (Field f : c.getDeclaredFields()) {
-                    f.setAccessible(true);
-                    if (!f.getName().equals("declaringClass") && !f.getName().equals("methodIndex"))
-                        f.set(src, f.get(dest));
-                }
-                c = c.getSuperclass();
+        while (c != Object.class) {
+            for (Field f : c.getDeclaredFields()) {
+                f.setAccessible(true);
+                if (!f.getName().equals("declaringClass") && !f.getName().equals("methodIndex"))
+                    f.set(src, f.get(dest));
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+            c = c.getSuperclass();
         }
+
+//        Class classClass = Class.forName("java.lang.reflect.ArtMethod");
+//        Field accessFlagsFiled = classClass.getDeclaredField("accessFlags");
+//        accessFlagsFiled.setAccessible(true);
+//        int accessFlags = (Integer) accessFlagsFiled.get(src);
+//        if (Modifier.isPrivate(accessFlags)) {
+//            accessFlags = accessFlags & (~Modifier.PRIVATE) | (Modifier.PUBLIC);
+//            accessFlagsFiled.set(src, accessFlags);
+//        }
     }
 }

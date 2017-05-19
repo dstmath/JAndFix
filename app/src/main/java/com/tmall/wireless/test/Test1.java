@@ -6,6 +6,10 @@ package com.tmall.wireless.test;
 
 public class Test1 {
 
+    public Test1() {
+        System.out.println("Test1");
+    }
+
     public String string() {
         return "Test1";
     }

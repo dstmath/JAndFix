@@ -1,5 +1,6 @@
 package com.tmall.wireless.jandfix;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
@@ -31,6 +32,18 @@ public class MethodReplace5_1 implements IMethodReplace {
             e.printStackTrace();
         }
     }
+
+    @Override
+    public void replace(Constructor src, Constructor dest) {
+        try {
+            Object o1 = artMethodField.get(src);
+            Object o2 = artMethodField.get(dest);
+            replaceReal(o1, o2);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 
     private void replaceReal(Object src, Object dest) throws Exception {
         int methodSize = MethodSizeUtils.methodSize();

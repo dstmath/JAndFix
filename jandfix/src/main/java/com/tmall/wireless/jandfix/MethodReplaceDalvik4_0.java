@@ -1,5 +1,6 @@
 package com.tmall.wireless.jandfix;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -15,41 +16,55 @@ public class MethodReplaceDalvik4_0 implements IMethodReplace {
     private final static int METHOD_SIZE_BYTE = 44;
     private final static int METHOD_INDEX_OFFSET = 2;
 
-    static Field slotField;
+    static Field methodSlotField;
+    static Field constructSlotField;
 
     static {
         try {
-            slotField = Method.class.getDeclaredField("slot");
-            slotField.setAccessible(true);
+            methodSlotField = Method.class.getDeclaredField("slot");
+            methodSlotField.setAccessible(true);
+
+            constructSlotField = Constructor.class.getDeclaredField("slot");
+            constructSlotField.setAccessible(true);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     @Override
-    public void replace(Method src, Method dest) {
-        try {
-            Class classSrc = src.getDeclaringClass();
-            Class classDest = dest.getDeclaringClass();
-            long virtualMethodSrcAddr = 0;
-            long virtualMethodDestAddr = 0;
+    public void replace(Method src, Method dest) throws Exception {
+        Class classSrc = src.getDeclaringClass();
+        Class classDest = dest.getDeclaringClass();
+        long virtualMethodSrcAddr = 0;
+        long virtualMethodDestAddr = 0;
 
-            if (isDirect(src)) {
-                virtualMethodSrcAddr = UnsafeProxy.getIntVolatile(classSrc, DIRECT_METHOD_OFFSET * 4);
-                virtualMethodDestAddr = UnsafeProxy.getIntVolatile(classDest, DIRECT_METHOD_OFFSET * 4);
-            } else {
-                virtualMethodSrcAddr = UnsafeProxy.getIntVolatile(classSrc, VIRTUAL_METHOD_OFFSET * 4);
-                virtualMethodDestAddr = UnsafeProxy.getIntVolatile(classDest, VIRTUAL_METHOD_OFFSET * 4);
-            }
-
-            //slot is methodIndex in action
-            int slotSrc = ((Integer) slotField.get(src)).intValue();
-            int slotDest = ((Integer) slotField.get(dest)).intValue();
-
-            replaceReal(virtualMethodSrcAddr + slotSrc * METHOD_SIZE_BYTE, virtualMethodDestAddr + slotDest * METHOD_SIZE_BYTE);
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (isDirect(src)) {
+            virtualMethodSrcAddr = UnsafeProxy.getIntVolatile(classSrc, DIRECT_METHOD_OFFSET * 4);
+            virtualMethodDestAddr = UnsafeProxy.getIntVolatile(classDest, DIRECT_METHOD_OFFSET * 4);
+        } else {
+            virtualMethodSrcAddr = UnsafeProxy.getIntVolatile(classSrc, VIRTUAL_METHOD_OFFSET * 4);
+            virtualMethodDestAddr = UnsafeProxy.getIntVolatile(classDest, VIRTUAL_METHOD_OFFSET * 4);
         }
+
+        //slot is methodIndex in action
+        int slotSrc = ((Integer) methodSlotField.get(src)).intValue();
+        int slotDest = ((Integer) methodSlotField.get(dest)).intValue();
+
+        replaceReal(virtualMethodSrcAddr + slotSrc * METHOD_SIZE_BYTE, virtualMethodDestAddr + slotDest * METHOD_SIZE_BYTE);
+    }
+
+    @Override
+    public void replace(Constructor src, Constructor dest) throws Exception {
+//        Class classSrc = src.getDeclaringClass();
+//        Class classDest = dest.getDeclaringClass();
+//        long virtualMethodSrcAddr = UnsafeProxy.getIntVolatile(classSrc, DIRECT_METHOD_OFFSET * 4);
+//        long virtualMethodDestAddr = UnsafeProxy.getIntVolatile(classDest, DIRECT_METHOD_OFFSET * 4);
+//
+//        //slot is methodIndex in action
+//        int slotSrc = ((Integer) constructSlotField.get(src)).intValue();
+//        int slotDest = ((Integer) constructSlotField.get(dest)).intValue();
+//
+//        replaceReal(virtualMethodSrcAddr + slotSrc * METHOD_SIZE_BYTE, virtualMethodDestAddr + slotDest * METHOD_SIZE_BYTE);
     }
 
     private void replaceReal(long src, long dest) throws Exception {

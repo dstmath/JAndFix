@@ -133,6 +133,8 @@ so easy,JAndFix就这样完成了方法替换。值得一提的是，由于忽�
 ```
 -keep class com.tmall.wireless.jandfix.MethodSizeCase { *;}
 ```
+* 如果要替换构造类，必须先替换构造类再替换方法。
+* Dalvik的构造类替换尚不支持
 
 ### 解释实现
 * 我以Android Art 6.0的实现来解释为什么这样实现就可实现方法替换

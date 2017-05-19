@@ -47,7 +47,7 @@ public class MethodSizeUtils {
 
     public static int declaringClassOffset() throws Exception {
         if (declaringClassOffset == Constants.INVALID_SIZE) {
-            declaringClassOffset = methodSize.methodIndexOffset();
+            declaringClassOffset = methodSize.declaringClassOffset();
         }
 
         if (declaringClassOffset == Constants.INVALID_SIZE) {

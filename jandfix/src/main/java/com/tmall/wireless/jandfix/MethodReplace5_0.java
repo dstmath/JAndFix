@@ -12,7 +12,6 @@ import java.lang.reflect.Modifier;
 
 public class MethodReplace5_0 implements IMethodReplace {
 
-
     static Field artMethodField;
 
     static {
@@ -27,6 +26,11 @@ public class MethodReplace5_0 implements IMethodReplace {
 
     @Override
     public void replace(Method src, Method dest) throws Exception {
+        //static 需要提前初始化
+        if (Modifier.isStatic(src.getModifiers())) {
+            Class.forName(src.getDeclaringClass().getName(), true, this.getClass().getClassLoader());
+            Class.forName(dest.getDeclaringClass().getName(), true, this.getClass().getClassLoader());
+        }
         Object o1 = artMethodField.get(src);
         Object o2 = artMethodField.get(dest);
         replaceReal(o1, o2);

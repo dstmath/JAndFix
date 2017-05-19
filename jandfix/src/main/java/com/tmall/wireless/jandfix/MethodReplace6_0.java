@@ -3,6 +3,7 @@ package com.tmall.wireless.jandfix;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 
 /**
  * Created by jingchaoqinjc on 17/5/15.
@@ -25,8 +26,13 @@ public class MethodReplace6_0 implements IMethodReplace {
 
     @Override
     public void replace(Method src, Method dest) throws Exception {
+        if (Modifier.isStatic(src.getModifiers())) {
+            Class.forName(src.getDeclaringClass().getName(), true, this.getClass().getClassLoader());
+            Class.forName(dest.getDeclaringClass().getName(), true, this.getClass().getClassLoader());
+        }
         long artMethodSrc = (long) artMethodField.get(src);
         long artMethodDest = (long) artMethodField.get(dest);
+
         replaceReal(artMethodSrc, artMethodDest);
     }
 

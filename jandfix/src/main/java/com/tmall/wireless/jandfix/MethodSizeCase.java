@@ -14,4 +14,7 @@ public final class MethodSizeCase {
     private void method3() {
     }
 
+    private void method4() {
+    }
+
 }

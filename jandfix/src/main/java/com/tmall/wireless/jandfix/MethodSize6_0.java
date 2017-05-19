@@ -24,33 +24,26 @@ public class MethodSize6_0 implements IMethodSize {
             Method method1 = MethodSizeCase.class.getDeclaredMethod("method1");
             Method method2 = MethodSizeCase.class.getDeclaredMethod("method2");
             Method method3 = MethodSizeCase.class.getDeclaredMethod("method3");
+            Method method4 = MethodSizeCase.class.getDeclaredMethod("method4");
 
             long method1Addr = (long) artMethodField.get(method1);
             long method2Addr = (long) artMethodField.get(method2);
             long method3Addr = (long) artMethodField.get(method3);
+            long method4Addr = (long) artMethodField.get(method4);
             methodSize = (int) (method2Addr - method1Addr);
             if (methodSize < 0) {
                 methodSize = -methodSize;
             }
 
             //init methodIndexOffset
-            int method1MethodIndex = 0;
-            Method[] methods = MethodSizeCase.class.getDeclaredMethods();
-            for (int i = 0, size = methods.length; i < size; i++) {
-                if (methods[i].equals(method1)) {
-                    //why +1? Becase "FindVirtualMethodForVirtualOrInterface(method, sizeof(void*))" has the offset of sizeof(void*)
-                    method1MethodIndex = i + 1;
-                    break;
-                }
-            }
-
             for (int i = 1, size = methodSize / 4; i < size; i++) {
                 int value1 = UnsafeProxy.getIntVolatile(method1Addr + i * 4);
                 int value2 = UnsafeProxy.getIntVolatile(method2Addr + i * 4);
                 int value3 = UnsafeProxy.getIntVolatile(method3Addr + i * 4);
-                if (value1 == method1MethodIndex
-                        && value2 == method1MethodIndex + 1
-                        && value3 == method1MethodIndex + 2) {
+                int value4 = UnsafeProxy.getIntVolatile(method4Addr + i * 4);
+                if (value2 == value1 + 1
+                        && value3 == value1 + 2
+                        && value4 == value1 + 3) {
                     methodIndexOffset = i * 4;
                 }
             }

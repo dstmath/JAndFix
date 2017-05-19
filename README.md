@@ -1,4 +1,5 @@
 Welcome to the JAndFix wiki!
+* [部分数据内容来自Hotfix](https://yq.aliyun.com/articles/74598)
 ``
 # JAndFix
 
@@ -213,6 +214,7 @@ static MemberOffset ArtMethodOffset() {
 ### 参考
 * [Unsafe](http://mishadoff.com/blog/java-magic-part-4-sun-dot-misc-dot-unsafe/)
 * [AndFix](https://github.com/alibaba/AndFix)
+* [Hotfix](https://yq.aliyun.com/articles/74598)
 
 ### License
 [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.html])

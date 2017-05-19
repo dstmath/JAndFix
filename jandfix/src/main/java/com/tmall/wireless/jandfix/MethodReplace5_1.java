@@ -23,25 +23,17 @@ public class MethodReplace5_1 implements IMethodReplace {
     }
 
     @Override
-    public void replace(Method src, Method dest) {
-        try {
-            Object o1 = artMethodField.get(src);
-            Object o2 = artMethodField.get(dest);
-            replaceReal(o1, o2);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public void replace(Method src, Method dest) throws Exception {
+        Object o1 = artMethodField.get(src);
+        Object o2 = artMethodField.get(dest);
+        replaceReal(o1, o2);
     }
 
     @Override
-    public void replace(Constructor src, Constructor dest) {
-        try {
-            Object o1 = artMethodField.get(src);
-            Object o2 = artMethodField.get(dest);
-            replaceReal(o1, o2);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public void replace(Constructor src, Constructor dest) throws Exception {
+        Object o1 = artMethodField.get(src);
+        Object o2 = artMethodField.get(dest);
+        replaceReal(o1, o2);
     }
 
 

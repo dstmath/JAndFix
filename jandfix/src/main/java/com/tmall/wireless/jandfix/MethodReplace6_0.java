@@ -24,25 +24,17 @@ public class MethodReplace6_0 implements IMethodReplace {
 
 
     @Override
-    public void replace(Method src, Method dest) {
-        try {
-            long artMethodSrc = (long) artMethodField.get(src);
-            long artMethodDest = (long) artMethodField.get(dest);
-            replaceReal(artMethodSrc, artMethodDest);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public void replace(Method src, Method dest) throws Exception {
+        long artMethodSrc = (long) artMethodField.get(src);
+        long artMethodDest = (long) artMethodField.get(dest);
+        replaceReal(artMethodSrc, artMethodDest);
     }
 
     @Override
-    public void replace(Constructor src, Constructor dest) {
-        try {
-            long artMethodSrc = (long) artMethodField.get(src);
-            long artMethodDest = (long) artMethodField.get(dest);
-            replaceReal(artMethodSrc, artMethodDest);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public void replace(Constructor src, Constructor dest) throws Exception {
+        long artMethodSrc = (long) artMethodField.get(src);
+        long artMethodDest = (long) artMethodField.get(dest);
+        replaceReal(artMethodSrc, artMethodDest);
     }
 
     private void replaceReal(long src, long dest) throws Exception {

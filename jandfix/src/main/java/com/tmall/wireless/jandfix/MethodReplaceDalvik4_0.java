@@ -47,24 +47,66 @@ public class MethodReplaceDalvik4_0 implements IMethodReplace {
         }
 
         //slot is methodIndex in action
+        /*
+        *
+        * Convert a slot number to a method pointer.
+        Method* dvmSlotToMethod(ClassObject* clazz, int slot)
+        {
+            if (slot < 0) {
+                slot = -(slot+1);
+                assert(slot < clazz->directMethodCount);
+                return &clazz->directMethods[slot];
+            } else {
+                assert(slot < clazz->virtualMethodCount);
+                return &clazz->virtualMethods[slot];
+            }
+        }
+        */
         int slotSrc = ((Integer) methodSlotField.get(src)).intValue();
+        if (slotSrc < 0) {
+            slotSrc = -(slotSrc + 1);
+        }
         int slotDest = ((Integer) methodSlotField.get(dest)).intValue();
+        if (slotDest < 0) {
+            slotDest = -(slotDest + 1);
+        }
 
         replaceReal(virtualMethodSrcAddr + slotSrc * METHOD_SIZE_BYTE, virtualMethodDestAddr + slotDest * METHOD_SIZE_BYTE);
     }
 
     @Override
     public void replace(Constructor src, Constructor dest) throws Exception {
-//        Class classSrc = src.getDeclaringClass();
-//        Class classDest = dest.getDeclaringClass();
-//        long virtualMethodSrcAddr = UnsafeProxy.getIntVolatile(classSrc, DIRECT_METHOD_OFFSET * 4);
-//        long virtualMethodDestAddr = UnsafeProxy.getIntVolatile(classDest, DIRECT_METHOD_OFFSET * 4);
-//
-//        //slot is methodIndex in action
-//        int slotSrc = ((Integer) constructSlotField.get(src)).intValue();
-//        int slotDest = ((Integer) constructSlotField.get(dest)).intValue();
-//
-//        replaceReal(virtualMethodSrcAddr + slotSrc * METHOD_SIZE_BYTE, virtualMethodDestAddr + slotDest * METHOD_SIZE_BYTE);
+        Class classSrc = src.getDeclaringClass();
+        Class classDest = dest.getDeclaringClass();
+        long virtualMethodSrcAddr = UnsafeProxy.getIntVolatile(classSrc, DIRECT_METHOD_OFFSET * 4);
+        long virtualMethodDestAddr = UnsafeProxy.getIntVolatile(classDest, DIRECT_METHOD_OFFSET * 4);
+
+        //slot is methodIndex in action
+        /*
+        *
+        * Convert a slot number to a method pointer.
+        Method* dvmSlotToMethod(ClassObject* clazz, int slot)
+        {
+            if (slot < 0) {
+                slot = -(slot+1);
+                assert(slot < clazz->directMethodCount);
+                return &clazz->directMethods[slot];
+            } else {
+                assert(slot < clazz->virtualMethodCount);
+                return &clazz->virtualMethods[slot];
+            }
+        }
+        */
+        int slotSrc = ((Integer) constructSlotField.get(src)).intValue();
+        if (slotSrc < 0) {
+            slotSrc = -(slotSrc + 1);
+        }
+        int slotDest = ((Integer) constructSlotField.get(dest)).intValue();
+        if (slotDest < 0) {
+            slotDest = -(slotDest + 1);
+        }
+
+        replaceReal(virtualMethodSrcAddr + slotSrc * METHOD_SIZE_BYTE, virtualMethodDestAddr + slotDest * METHOD_SIZE_BYTE);
     }
 
     private void replaceReal(long src, long dest) throws Exception {

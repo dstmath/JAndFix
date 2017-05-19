@@ -18,4 +18,8 @@ public class Test1 {
         return "string2";
     }
 
+    public static String staticString() {
+        return "StaticTest1";
+    }
+
 }

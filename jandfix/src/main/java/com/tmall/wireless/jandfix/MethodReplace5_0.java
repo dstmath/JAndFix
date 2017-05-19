@@ -45,10 +45,8 @@ public class MethodReplace5_0 implements IMethodReplace {
             while (c != Object.class) {
                 for (Field f : c.getDeclaredFields()) {
                     f.setAccessible(true);
-                    if ((f.getModifiers() & Modifier.STATIC) == 0) {
-                        if (!f.getName().equals("declaringClass") && !f.getName().equals("methodIndex"))
-                            f.set(src, f.get(dest));
-                    }
+                    if (!f.getName().equals("declaringClass") && !f.getName().equals("methodIndex"))
+                        f.set(src, f.get(dest));
                 }
                 c = c.getSuperclass();
             }

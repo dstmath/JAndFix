@@ -14,4 +14,8 @@ public class Test2 {
         return "Test2";
     }
 
+    public static String staticString() {
+        return "StaticTest2";
+    }
+
 }

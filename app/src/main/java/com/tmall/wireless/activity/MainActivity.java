@@ -20,7 +20,7 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         TextView textView = (TextView) findViewById(R.id.text);
-        textView.setText("本应该显示:Test1;实现显示:" + new Test1().string());
+        textView.setText("本应该显示:Test1;实际显示:" + new Test1().string()+"\n"+"本应该显示:StaticTest1;实际显示:" + Test1.staticString());
     }
 
 

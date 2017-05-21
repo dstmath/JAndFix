@@ -1,6 +1,8 @@
 package com.tmall.wireless.jandfix;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 
 import android.os.Build;
 
@@ -33,12 +35,73 @@ public class MethodReplaceProxy implements IMethodReplace {
     }
 
     @Override
-    public void replace(Method src, Method dest) {
+    public void replace(Method src, Method dest) throws Exception {
+        checkMethod(src, dest);
+        realReplace.replace(src, dest);
+    }
+
+    @Override
+    public void replace(Constructor src, Constructor dest) throws Exception {
+        checkConstructor(src, dest);
         realReplace.replace(src, dest);
     }
 
     private static class Holder {
         static MethodReplaceProxy instance = new MethodReplaceProxy();
+    }
+
+    private void checkMethod(Method src, Method dest) {
+        if (src == null || dest == null)
+            throw new IllegalArgumentException();
+        if (src.getReturnType() != dest.getReturnType()) {
+            throw new RuntimeException("返回类型必须一致");
+        }
+
+        if (!checkClasses(src.getExceptionTypes(), dest.getExceptionTypes())) {
+            throw new RuntimeException("异常类型必须一致");
+        }
+
+        if (!checkClasses(src.getParameterTypes(), dest.getParameterTypes())) {
+            throw new RuntimeException("参数类型必须一致");
+        }
+
+        if (!Modifier.isStatic(src.getModifiers()) == Modifier.isStatic(dest.getModifiers())) {
+            throw new RuntimeException("必须都为static或都不为static");
+        }
+
+    }
+
+    private void checkConstructor(Constructor src, Constructor dest) {
+        if (src == null || dest == null)
+            throw new IllegalArgumentException();
+
+        if (!checkClasses(src.getExceptionTypes(), dest.getExceptionTypes())) {
+            throw new RuntimeException("异常类型必须一致");
+        }
+
+        if (!checkClasses(src.getParameterTypes(), dest.getParameterTypes())) {
+            throw new RuntimeException("参数类型必须一致");
+        }
+
+    }
+
+    private boolean checkClasses(Class[] srcClasses, Class[] destClasses) {
+        if (srcClasses == null && destClasses == null) {
+            return true;
+        }
+        if (srcClasses == null || destClasses == null) {
+            return false;
+        }
+        if (srcClasses.length != destClasses.length) {
+            return false;
+        }
+
+        for (int i = 0, size = srcClasses.length; i < size; i++) {
+            if (srcClasses[i] != destClasses[i]) {
+                return false;
+            }
+        }
+        return true;
     }
 
 }

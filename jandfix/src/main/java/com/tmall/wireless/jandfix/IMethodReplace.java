@@ -1,5 +1,6 @@
 package com.tmall.wireless.jandfix;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 
 /**
@@ -8,6 +9,8 @@ import java.lang.reflect.Method;
 
 public interface IMethodReplace {
 
-    public void replace(Method src, Method dest);
+    void replace(Method src, Method dest) throws Exception;
+
+    void replace(Constructor src, Constructor dest) throws Exception;
 
 }

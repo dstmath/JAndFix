@@ -1,5 +1,6 @@
 package com.tmall.wireless.jandfix;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 
 /**
@@ -7,8 +8,14 @@ import java.lang.reflect.Method;
  */
 
 public class MethodReplaceArt4_0 implements IMethodReplace{
+
     @Override
-    public void replace(Method src, Method dest) {
+    public void replace(Method src, Method dest) throws Exception {
+
+    }
+
+    @Override
+    public void replace(Constructor src, Constructor dest) throws Exception {
 
     }
 }

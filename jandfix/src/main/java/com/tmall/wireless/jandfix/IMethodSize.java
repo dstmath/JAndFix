@@ -10,4 +10,6 @@ public interface IMethodSize {
 
     int methodIndexOffset() throws Exception;
 
+    int declaringClassOffset() throws Exception;
+
 }

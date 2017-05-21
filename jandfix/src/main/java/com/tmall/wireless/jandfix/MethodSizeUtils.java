@@ -11,6 +11,7 @@ public class MethodSizeUtils {
     private static int size = Constants.INVALID_SIZE;
     private static IMethodSize methodSize = null;
     private static int methodIndexOffset = Constants.INVALID_SIZE;
+    private static int declaringClassOffset = Constants.INVALID_SIZE;
 
     static {
         if (Build.VERSION.SDK_INT >= 14 && Build.VERSION.SDK_INT < 21) {
@@ -26,7 +27,7 @@ public class MethodSizeUtils {
         if (size == Constants.INVALID_SIZE) {
             size = methodSize.methodSize();
         }
-        if(size == Constants.INVALID_SIZE){
+        if (size == Constants.INVALID_SIZE) {
             throw new RuntimeException();
         }
         return size;
@@ -37,11 +38,23 @@ public class MethodSizeUtils {
             methodIndexOffset = methodSize.methodIndexOffset();
         }
 
-        if(methodIndexOffset == Constants.INVALID_SIZE){
+        if (methodIndexOffset == Constants.INVALID_SIZE) {
             throw new RuntimeException();
         }
 
         return methodIndexOffset;
+    }
+
+    public static int declaringClassOffset() throws Exception {
+        if (declaringClassOffset == Constants.INVALID_SIZE) {
+            declaringClassOffset = methodSize.declaringClassOffset();
+        }
+
+        if (declaringClassOffset == Constants.INVALID_SIZE) {
+            throw new RuntimeException();
+        }
+
+        return declaringClassOffset;
     }
 
 }

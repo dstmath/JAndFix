@@ -6,8 +6,24 @@ package com.tmall.wireless.test;
 
 public class Test2 {
 
+    public Test2() {
+        System.out.println("Test2");
+    }
+
     public String string() {
         return "Test2";
+    }
+
+    private String privateString() {
+        return "privateTest2";
+    }
+
+    protected String protectedString() {
+        return "protectedTest2";
+    }
+
+    public static String staticString() {
+        return "StaticTest2";
     }
 
 }
